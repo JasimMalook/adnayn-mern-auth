@@ -1,0 +1,11 @@
+{
+  "name": "smart-content-manager-monorepo",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "backend": "cd backend && npm run dev",
+    "backend:start": "cd backend && npm start",
+    "frontend": "cd frontend && npm run dev",
+    "frontend:build": "cd frontend && npm run build && npm run start"
+  }
+}
