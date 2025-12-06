@@ -26,6 +26,8 @@ frontend/node_modules/
 frontend/build/
 frontend/.env
 frontend/.env.local
+frontend/.next/
+
 
 ### BACKEND (Node.js/Express) ###
 backend/node_modules/

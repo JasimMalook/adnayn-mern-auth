@@ -10,10 +10,20 @@ const app = express();
 // Middleware
 app.use(express.json());
 
-const allowedOrigin = process.env.CORS_ORIGIN || 'http://localhost:3000';
+// Allow multiple frontend origins (e.g. Next.js on 3000 or 3001)
+const allowedOrigins = (process.env.CORS_ORIGIN || 'http://localhost:3000,http://localhost:3001')
+  .split(',')
+  .map((o) => o.trim());
+
 app.use(
   cors({
-    origin: allowedOrigin,
+    origin: (origin, callback) => {
+      // Allow non-browser clients or same-origin
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Not allowed by CORS'));
+    },
     credentials: true,
   })
 );

@@ -1,13 +1,22 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
+// Generate JWT Token
 const generateToken = (user) => {
-  return jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
-    expiresIn: '7d',
-  });
+  if (!process.env.JWT_SECRET) {
+    console.error("❌ JWT_SECRET missing in .env");
+  }
+
+  return jwt.sign(
+    { id: user._id, role: user.role },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' }
+  );
 };
 
-// Register new user
+// ------------------------
+// Signup
+// ------------------------
 exports.signup = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -32,13 +41,16 @@ exports.signup = async (req, res) => {
         role: user.role,
       },
     });
+
   } catch (err) {
-    console.error('Signup error', err.message);
+    console.error("Signup error:", err);
     return res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Login user
+// ------------------------
+// Login
+// ------------------------
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -63,20 +75,26 @@ exports.login = async (req, res) => {
         role: user.role,
       },
     });
+
   } catch (err) {
-    console.error('Login error', err.message);
+    console.error("Login error:", err);
     return res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Get current user profile
+// ------------------------
+// Get Authenticated User
+// ------------------------
 exports.getMe = async (req, res) => {
   return res.json({ user: req.user });
 };
 
-// Get usage info
+// ------------------------
+// Usage Stats
+// ------------------------
 exports.getUsage = async (req, res) => {
   const user = req.user;
+
   return res.json({
     role: user.role,
     aiRequestsThisMonth: user.aiRequestsThisMonth,

@@ -8,13 +8,13 @@ const {
   deletePost,
 } = require('../controllers/aiController');
 const { protect } = require('../middleware/authMiddleware');
-const { checkAiLimit } = require('../middleware/planMiddleware');
+const { checkAiLimit, checkPostSaveLimit } = require('../middleware/planMiddleware');
 
 // AI generation
 router.post('/generate', protect, checkAiLimit, generateContent);
 
 // Post CRUD
-router.post('/posts', protect, savePost);
+router.post('/posts', protect, checkPostSaveLimit, savePost);
 router.get('/posts', protect, getMyPosts);
 router.put('/posts/:id', protect, updatePost);
 router.delete('/posts/:id', protect, deletePost);
